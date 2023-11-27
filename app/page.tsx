@@ -1,14 +1,16 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
 export default function Home() {
-  const [apiToken, setApiToken] = useState<string | null>(
-    localStorage.getItem("apiToken"), // grab saved value if it exists
-  );
+  const [apiToken, setApiToken] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setApiToken(localStorage.getItem("apiToken")); // load saved value
+  }, []);
 
   return (
     <main className="m-8 flex flex-col items-start gap-4">
