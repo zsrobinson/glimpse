@@ -22,7 +22,7 @@ export function GlobalLoadingIndicator() {
   }, [isFetching, isMutating, beforeUnload]);
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-grow items-center justify-end gap-2">
       {(isFetching || isMutating) && (
         <IconLoader2 className="animate-spin text-muted-foreground" />
       )}

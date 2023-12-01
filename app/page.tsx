@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  IconCalendar,
+  IconCalendarWeek,
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
@@ -39,7 +39,8 @@ export default function Home() {
 
   return (
     <main className="flex h-full flex-col items-start gap-4">
-      <div className="flex gap-4">
+      <div className="flex w-full items-center gap-2">
+        <IconCalendarWeek />
         <h1 className="text-2xl font-semibold">Todoist Weekly</h1>
         <GlobalLoadingIndicator />
       </div>
@@ -53,14 +54,51 @@ export default function Home() {
               setToken(value);
               localStorage.setItem("token", value); // persist value
             }}
+            variant="secondary"
           >
             Submit
           </Button>
         </div>
       ) : (
         <>
-          <div className="box-content flex rounded-md border border-border">
-            {/* <Button
+          <div className="flex gap-4">
+            <div className="box-content flex rounded-md border border-border">
+              <ShiftDateButton amount={-5} setDate={setDate}>
+                <IconChevronsLeft size={16} />
+              </ShiftDateButton>
+
+              <ShiftDateButton amount={-1} setDate={setDate}>
+                <IconChevronLeft size={16} />
+              </ShiftDateButton>
+
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"link"}
+                    className={cn(
+                      "w-[160px] justify-center text-center font-normal",
+                      !date && "text-muted-foreground",
+                    )}
+                  >
+                    {/* <IconCalendar className="mr-2" size={16} /> */}
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar mode="single" selected={date} onSelect={setDate} />
+                </PopoverContent>
+              </Popover>
+
+              <ShiftDateButton amount={1} setDate={setDate}>
+                <IconChevronRight size={16} />
+              </ShiftDateButton>
+
+              <ShiftDateButton amount={5} setDate={setDate}>
+                <IconChevronsRight size={16} />
+              </ShiftDateButton>
+            </div>
+
+            <Button
               onClick={() => {
                 localStorage.removeItem("apiToken");
                 setToken(null);
@@ -68,41 +106,7 @@ export default function Home() {
               variant="secondary"
             >
               Clear API Token
-            </Button> */}
-
-            <ShiftDateButton amount={-5} setDate={setDate}>
-              <IconChevronsLeft size={16} />
-            </ShiftDateButton>
-
-            <ShiftDateButton amount={-1} setDate={setDate}>
-              <IconChevronLeft size={16} />
-            </ShiftDateButton>
-
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"link"}
-                  className={cn(
-                    "w-[160px] justify-center text-center font-normal",
-                    !date && "text-muted-foreground",
-                  )}
-                >
-                  {/* <IconCalendar className="mr-2" size={16} /> */}
-                  {date ? format(date, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar mode="single" selected={date} onSelect={setDate} />
-              </PopoverContent>
-            </Popover>
-
-            <ShiftDateButton amount={1} setDate={setDate}>
-              <IconChevronRight size={16} />
-            </ShiftDateButton>
-
-            <ShiftDateButton amount={5} setDate={setDate}>
-              <IconChevronsRight size={16} />
-            </ShiftDateButton>
+            </Button>
           </div>
 
           <ColumnView startingDate={date} />
