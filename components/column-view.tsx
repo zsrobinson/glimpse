@@ -14,9 +14,12 @@ type TempTask = {
   dueString: string;
 };
 
-export function ColumnView() {
+type ColumnViewProps = { startingDate: Date | undefined };
+
+export function ColumnView({ startingDate }: ColumnViewProps) {
+  const [parent] = useAutoAnimate();
+  if (!startingDate) startingDate = new Date();
   const dates: string[] = [];
-  const startingDate = new Date();
 
   for (let i = 0; i < 5; i++) {
     const date = new Date(startingDate);
@@ -27,7 +30,7 @@ export function ColumnView() {
   }
 
   return (
-    <div className="flex h-full w-full gap-4">
+    <div className="flex h-full w-full gap-4" ref={parent}>
       {dates.map((date) => (
         <DateColumn key={date} date={date} />
       ))}
@@ -91,9 +94,7 @@ function DateColumn({ date }: { date: string }) {
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary font-semibold text-secondary-foreground">
-            {date.split("-")[2].startsWith("0")
-              ? date.split("-")[2][1]
-              : date.split("-")[2]}
+            {Number(date.split("-")[2])}
           </div>
 
           <h2 className="text-lg font-semibold">{getDayName(date)}</h2>
