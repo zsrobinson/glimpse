@@ -1,9 +1,10 @@
 "use client";
 
 import { AddTaskArgs, Task, TodoistApi } from "@doist/todoist-api-typescript";
+import { IconCircle, IconCircleCheck } from "@tabler/icons-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { DateTasks, filterTasks, getDayName } from "~/lib/utils";
 import { Input } from "./ui/input";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function ColumnView() {
   const token = localStorage.getItem("token")!;
@@ -30,7 +31,7 @@ function DateColumn({ dateTasks }: { dateTasks: DateTasks }) {
   const api = new TodoistApi(token);
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate: addTask } = useMutation({
     mutationFn: (args: AddTaskArgs) => api.addTask(args),
     onSuccess: () => {
       return queryClient.invalidateQueries({ queryKey: ["tasks"] });
@@ -50,9 +51,9 @@ function DateColumn({ dateTasks }: { dateTasks: DateTasks }) {
           </h2>
         </div>
 
-        <ul className="list-inside list-disc">
+        <ul className="flex flex-col gap-2">
           {dateTasks.tasks.map((task, i) => (
-            <li key={i}>{task.content}</li>
+            <TaskItem key={i} task={task} />
           ))}
         </ul>
       </div>
@@ -63,14 +64,11 @@ function DateColumn({ dateTasks }: { dateTasks: DateTasks }) {
           const formData = new FormData(e.target as HTMLFormElement);
           const content = formData.get("content") as string;
 
-          mutate({
+          addTask({
             content,
-            dueString:
-              dateTasks.date.getFullYear() +
-              "-" +
-              (dateTasks.date.getMonth() + 1) +
-              "-" +
-              dateTasks.date.getDate(),
+            dueString: `${dateTasks.date.getFullYear()}-${
+              dateTasks.date.getMonth() + 1
+            }-${dateTasks.date.getDate()}`,
           });
 
           (e.target as HTMLFormElement).reset();
@@ -80,5 +78,35 @@ function DateColumn({ dateTasks }: { dateTasks: DateTasks }) {
         <Input placeholder="Add task" name="content" />
       </form>
     </div>
+  );
+}
+
+function TaskItem({ task }: { task: Task }) {
+  const token = localStorage.getItem("token")!;
+  const api = new TodoistApi(token);
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteTask } = useMutation({
+    mutationFn: (id: string) => {
+      return api.deleteTask(id);
+    },
+    onSuccess: () => {
+      return queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
+  return (
+    <li className="flex gap-2">
+      <button
+        className="group relative flex"
+        onClick={() => {
+          deleteTask(task.id);
+        }}
+      >
+        <IconCircle className="text-muted-foreground group-hover:text-transparent" />
+        <IconCircleCheck className="absolute left-0 top-0 text-transparent group-hover:text-muted-foreground" />
+      </button>
+      <span className="leading-tight">{task.content}</span>
+    </li>
   );
 }
