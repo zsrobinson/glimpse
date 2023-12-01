@@ -1,11 +1,12 @@
 "use client";
 
 import { AddTaskArgs, Task, TodoistApi } from "@doist/todoist-api-typescript";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { IconCircle, IconCircleCheck } from "@tabler/icons-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { getDayName } from "~/lib/utils";
 import { Input } from "./ui/input";
-import { useEffect, useState } from "react";
 
 type TempTask = {
   id: string;
@@ -39,6 +40,7 @@ function DateColumn({ date }: { date: string }) {
   const api = new TodoistApi(token);
   const queryClient = useQueryClient();
   const [tempTasks, setTempTasks] = useState<TempTask[]>([]);
+  const [parent] = useAutoAnimate();
 
   const tasks = useQuery<Task[]>({
     queryKey: ["tasks"],
@@ -97,10 +99,10 @@ function DateColumn({ date }: { date: string }) {
           <h2 className="text-lg font-semibold">{getDayName(date)}</h2>
         </div>
 
-        <ul className="flex flex-col gap-2">
-          {dateTasks?.map((task, i) => <TaskItem key={i} task={task} />)}
-          {tempTasks.map((task, i) => (
-            <TempTaskItem key={i} task={task} />
+        <ul className="flex flex-col gap-2" ref={parent}>
+          {dateTasks?.map((task) => <TaskItem key={task.id} task={task} />)}
+          {tempTasks.map((task) => (
+            <TempTaskItem key={task.id} task={task} />
           ))}
         </ul>
       </div>
