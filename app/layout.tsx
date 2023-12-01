@@ -3,7 +3,7 @@ import "./globals.css";
 import { ReactNode } from "react";
 import { Providers } from "~/components/providers";
 
-export const metadata: Metadata = { title: "Todoist Weekly" };
+export const metadata: Metadata = { title: "Glimpse, for Todoist" };
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (

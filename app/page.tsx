@@ -41,7 +41,7 @@ export default function Home() {
     <main className="flex h-full flex-col items-start gap-4">
       <div className="flex w-full items-center gap-2">
         <IconCalendarWeek />
-        <h1 className="text-2xl font-semibold">Todoist Weekly</h1>
+        <h1 className="text-2xl font-semibold">Glimpse, for Todoist</h1>
         <GlobalLoadingIndicator />
       </div>
 
