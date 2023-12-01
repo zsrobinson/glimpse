@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { DateTasks, filterTasks, getDayName } from "~/lib/utils";
 import { Input } from "./ui/input";
 
-export default function ColumnView() {
+export function ColumnView() {
   const token = localStorage.getItem("token")!;
   const api = new TodoistApi(token);
 

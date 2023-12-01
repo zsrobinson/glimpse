@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ReactNode } from "react";
-import Providers from "~/components/providers";
+import { Providers } from "~/components/providers";
 
 export const metadata: Metadata = { title: "Todoist Weekly" };
 
